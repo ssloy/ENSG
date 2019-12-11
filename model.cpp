@@ -45,9 +45,11 @@ Model::Model(const char *filename) : verts(), faces(), v2h(), opposites() {
     compute_opposites();
 }
 
-int Model::first_halfedge(int vid) {
-    assert(vid>=0 && vid<nverts());
-    return v2h[vid].front();
+bool Model::is_boundary_vert(int v) {
+    for (int hid : incident_halfedges(v)) {
+        if (opp(hid)<0) return true;
+    }
+    return false;
 }
 
 int Model::from(int hid) {
@@ -60,14 +62,6 @@ int Model::to(int hid) {
 
 int Model::opp(int hid) {
     return opposites[hid];
-}
-
-int Model::next(int hid) {
-    return (hid/3)*3 + ((hid%3)+1)%3;
-}
-
-int Model::prev(int hid) {
-    return (hid/3)*3 + ((hid%3)+2)%3;
 }
 
 void Model::compute_opposites() {
@@ -97,6 +91,9 @@ int Model::nfaces() {
 
 int Model::nhalfedges() {
     return faces.size()*3;
+}
+std::vector<int> &Model::incident_halfedges(int v) {
+    return v2h[v];
 }
 
 void Model::get_bbox(Vec3f &min, Vec3f &max) {
