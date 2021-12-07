@@ -75,24 +75,15 @@ class Mesh():
     def prev(self, c):
         return (c//3)*3 + (c+2)%3
 
+    def next(self, c):
+        return (c//3)*3 + 1
+
     def opposite(self, c):
         return self.opp[c]
 
     def on_border(self, v):
         return self.boundary[v]
     
-    def one_ring_barycenter(self, v):
-        bary = np.zeros(3)
-        cnt = 1
-        cir = self.v2c[v]
-        if cir<0: return bary
-        while True:
-            bary = np.add(bary, self.V[self.T[cir//3][(cir+1)%3]])
-            cir = self.c2c[cir]
-            if (cir==self.v2c[v]): break
-            cnt = cnt + 1
-        return bary/cnt
-
     def __str__(self):
         ret = ""
         for v in self.V:
@@ -100,5 +91,3 @@ class Mesh():
         for t in self.T:
             ret = ret + ("f %d %d %d\n" % (t[0]+1, t[1]+1, t[2]+1))
         return ret
-
-
