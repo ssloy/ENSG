@@ -32,4 +32,3 @@ for model,nhor in models:
 	print("horizon_id = " + str(horizon_id), file = out)
 	print("is_fault = " + str(is_fault), file = out)
 	out.close()
-	break
