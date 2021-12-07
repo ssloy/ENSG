@@ -1,7 +1,7 @@
 from mesh import Mesh
 import importlib
 
-model = "ifp2"
+model = "chevron"
 m = Mesh(model+"/slice.obj")
 attr = importlib.import_module(model + ".attributes")
 
