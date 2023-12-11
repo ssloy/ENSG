@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 class Mesh():
     def __init__(self, filename):
@@ -41,7 +42,7 @@ class Mesh():
                     opp = cand # we suppose manifold input
                 cir = self.c2c[cir]
                 if (cir==c): break
-            self.opp[c] = opp 
+            self.opp[c] = opp
 
         self.boundary = np.array([False]*self.nverts)
         for v in range(self.nverts):
@@ -83,7 +84,20 @@ class Mesh():
 
     def on_border(self, v):
         return self.boundary[v]
-    
+
+    def neighbors(self,v):
+        out = []
+        cir = self.v2c[v]
+        if cir<0: return []
+        cnt = 0
+        while True:
+            neigh = self.T[cir//3][(cir+1)%3]
+            out.append(neigh)
+            cir = self.c2c[cir]
+            if (cir==self.v2c[v]): break
+            cnt = cnt + 1
+        return out
+
     def __str__(self):
         ret = ""
         for v in self.V:
@@ -91,3 +105,35 @@ class Mesh():
         for t in self.T:
             ret = ret + ("f %d %d %d\n" % (t[0]+1, t[1]+1, t[2]+1))
         return ret
+
+    def write_vtk(self, filename, scalar_field=None):
+        original_stdout = sys.stdout
+        with open(filename, 'w') as f:
+            sys.stdout = f # Change the standard output to the file we created.
+
+
+            print("""# vtk DataFile Version 3.0
+ENSG geometry processing course
+ASCII
+DATASET UNSTRUCTURED_GRID
+""")
+            print("POINTS %d double" % self.nverts)
+            for v in self.V:
+                print("%f %f %f" % (v[0], v[1], v[2]))
+            print("\nCELLS %d %d" % (self.ntriangles, 4*self.ntriangles))
+            for t in self.T:
+                print("3 %d %d %d" % (t[0], t[1], t[2]))
+            print("\nCELL_TYPES %d" % self.ntriangles)
+            print( "5 " * self.ntriangles)
+
+            if scalar_field is not None:
+                assert len(scalar_field)==self.nverts
+                print("""\nPOINT_DATA %d
+SCALARS f double 1
+LOOKUP_TABLE default""" % self.nverts)
+                for v in scalar_field:
+                    print("%f " % v, end="")
+            sys.stdout = original_stdout # Reset the standard output to its original value
+
+
+
