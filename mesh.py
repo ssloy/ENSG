@@ -106,6 +106,14 @@ class Mesh():
             ret = ret + ("f %d %d %d\n" % (t[0]+1, t[1]+1, t[2]+1))
         return ret
 
+    def write_obj(self, filename):
+        original_stdout = sys.stdout
+        with open(filename, 'w') as f:
+            sys.stdout = f # Change the standard output to the file we created.
+            print(self)
+            sys.stdout = original_stdout # Reset the standard output to its original value
+
+
     def write_vtk(self, filename, scalar_field=None):
         original_stdout = sys.stdout
         with open(filename, 'w') as f:
