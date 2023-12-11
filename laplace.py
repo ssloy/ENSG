@@ -25,5 +25,6 @@ for dim in range(2): # solve for x first, then for y
     for i in range(m.nverts): # apply the computed flattening
         m.V[i][dim] = x[i]
 
-print(m) # output the deformed mesh
+m.write_vtk("output.vtk")
+#print(m) # output the deformed mesh
 
