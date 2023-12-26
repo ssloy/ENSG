@@ -17,8 +17,8 @@ for dim in range(2): # solve for x first, then for y
 
     for (i,v) in enumerate(m.V):
         if m.on_border(i):
-            A[row, i] = 1 *100 # quadratic penalty to lock boundary vertices
-            b[row] = v[dim] *100
+            A[row, i] = 1 * 100 # quadratic penalty to lock boundary vertices
+            b[row] = v[dim] * 100
             row += 1
     A = A.tocsr() # convert to compressed sparse row format for faster matrix-vector muliplications
     x = lsmr(A, b)[0] # call the least squares solver

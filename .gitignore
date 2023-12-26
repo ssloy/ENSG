@@ -1,2 +1,4 @@
 .idea/
 venv/
+token.txt
+*.vtk
