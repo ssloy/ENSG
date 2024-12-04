@@ -77,7 +77,7 @@ class Mesh():
         return (c//3)*3 + (c+2)%3
 
     def next(self, c):
-        return (c//3)*3 + 1
+        return (c//3)*3 + (c+1)%3
 
     def opposite(self, c):
         return self.opp[c]
